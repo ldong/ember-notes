@@ -9,6 +9,10 @@ export default Ember.Route.extend({
     console.log('controller');
   },
 
+  renderTemplate() {
+    console.log('renderTemplate');
+  },
+
   beforeModel(transition){
     console.log('beforeModel');
   },
