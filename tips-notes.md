@@ -333,22 +333,34 @@ export default DS.Model.extend({
 
 ## Mut
 
-```
-<label
-  class="btn btn-primary
-  {{if (eq mdm.tier tier) "active" ""}}"
-  {{!-- {{action "updateSelectedTier" tier}} --}}
->
-  {{input
-    type="radio"
-    onclick=(action (mut mdm.tier) tier)
-  }}
-    {{tier.name}}
-</label>
-
+Working
 
 ```
+{{#each tiers as |tier|}}
+  <label
+    class="btn btn-primary
+    {{if (eq mdm.tier tier) "active" ""}}"
+    onclick={{action (mut mdm.tier) tier}}
+  >
+    <input type="radio" name="role">{{tier.name}}
+  </label>
+{{/each}}
 
+```
+
+Alternative
+
+Handlebars
+```
+{{#each tiers as |tier|}}
+  <label class="btn btn-primary {{if (eq selectedTier tier) "active" ""}}" {{action "updateSelectedTier" tier}}>
+    <input type="radio" name="role">{{tier.name}}
+  </label>
+{{/each}}
+
+```
+
+Controller/ Component.js
 ```
   actions: {
     updateSelectedTier(tier) {
