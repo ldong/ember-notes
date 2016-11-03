@@ -74,4 +74,47 @@ export default Ember.Controller.extend({
 });
 ```
 
+## Components
 
+```javascript
+import Ember from 'ember';
+
+export default Ember.Component.extend({
+  didInitAttrs(options) {
+    console.log('didInitAttrs', options);
+  },
+
+  didUpdateAttrs(options) {
+    console.log('didUpdateAttrs', options);
+  },
+
+  willUpdate(options) {
+    console.log('willUpdate', options);
+  },
+
+  didReceiveAttrs(options) {
+    console.log('didReceiveAttrs', options);
+  },
+
+  willRender() {
+    console.log('willRender');
+  },
+
+  didRender() {
+    console.log('didRender');
+  },
+
+  didInsertElement() {
+    console.log('didInsertElement');
+  },
+
+  didUpdate(options) {
+    console.log('didUpdate', options);
+  },
+});
+```
+
+Ref:
+
+1. https://gist.github.com/jpadilla/2f9d698cdaed87821623
+2. https://github.com/emberjs/ember.js/blob/v2.8.2/packages/ember-htmlbars/lib/component.js#L413
