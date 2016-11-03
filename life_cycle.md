@@ -25,6 +25,14 @@ export default Ember.Route.extend({
     console.log('setupController');
   },
 
+  activate() {
+    console.log('activate');
+  },
+
+  deactivate() {
+    console.log('deactivate');
+  },
+
   actions: {
     didTransition() {
       console.log('didTransition');
@@ -33,14 +41,12 @@ export default Ember.Route.extend({
 
     willTransition(transition) {
       console.log('willTransition');
-    },
-
-    deactivate() {
-      console.log('deactivate');
     }
   }
 })
 ```
+
+Ref: http://ember.vicramon.com/ember-route
 
 ## Controller
 
@@ -67,3 +73,5 @@ export default Ember.Controller.extend({
   }
 });
 ```
+
+

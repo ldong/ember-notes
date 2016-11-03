@@ -373,3 +373,183 @@ Only works on primities, string, number and boolean, it wont work on `objects`.
 
 Ref: https://til.hashrocket.com/posts/dc22a1be25-lets-talk-about-embers-mut-htmlbars-helper
 
+
+# Serializer
+
+[javascript closure change parameter](http://javascriptissexy.com/understand-javascript-closures-with-ease/)
+
+
+```javascript
+change = function(a) {
+ a = a.data;
+}
+
+b = {data: 100}
+change(b)
+```
+
+### Serializer
+
+```javascript
+import Ember from 'ember';
+import DS from 'ember-data';
+
+export default DS.RESTSerializer.extend({
+  serializeIntoHash: function(data, type, record, options) {
+    this._super(...arguments);
+    data = data.mdm;
+
+    // var root = Ember.String.decamelize(type.modelName);
+    // data[root] = this.serialize(record, options);
+    // data = this.serialize(record, options);
+  },
+
+  // serializeIntoHash: function(data, type, record, options) {
+  //   var root = Ember.String.decamelize(type.modelName);
+  //   // data[root] = this.serialize(record, options);
+  //   data = this.serialize(record, options);
+  //   return data;
+  // },
+
+  // serialize(snapshot, options) {
+  //   var json = this._super(...arguments);
+
+  //   // json.data.attributes.cost = {
+  //   //   amount: json.data.attributes.amount,
+  //   //   currency: json.data.attributes.currency
+  //   // };
+
+  //   // delete json.data.attributes.amount;
+  //   // delete json.data.attributes.currency;
+
+  //   return json;
+  // },
+
+  // normalize (modelClass, resourceHash, prop) {
+  //   console.log('run normalize');
+  // },
+  //
+
+
+  /**
+   * normalize the payload for the filters response
+   * @param  {DS.Store} store             main store
+   * @param  {DS.Model} primaryModelClass model type
+   * @param  {Obejct} payload             response from server
+   * @param  {String|Number} id           id requested, should be null
+   * @param  {String} requestType         type of request, findAll, findRecord
+   * @return {Object}                     JSON-API document
+   */
+  normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+    console.log('run normalizeResponse');
+
+    let newPayload = {
+      mdms: payload
+    };
+    console.log('newPayload', newPayload);
+    return this._super(store, primaryModelClass, newPayload, id, requestType);
+  },
+
+  // normalizeFindAllResponse(store, primaryModelClass, payload, id, requestType){
+  //   console.log('normalizeFindAllResponse');
+  //   return this._super(store, primaryModelClass, payload, id, requestType);
+  // },
+
+  // normalizeArrayResponse (store, primaryModelClass, payload, id, requestType) {
+  //   console.log('run normalizeArrayResponse');
+
+  //   return this._super(store, primaryModelClass, payload, id, requestType);
+  // },
+
+
+});
+```
+
+### Adapter
+
+```javascript
+import BaseAdapter from 'insights/adapters/base-adapter';
+
+/**
+ * rest adapter for requesting mdm
+ */
+export default BaseAdapter.extend({
+  // createRecord(store, type, snapshot) {
+
+  //   this._super(...arguments);
+  //   // var serializer = store.serializerFor(type.modelName);
+  //   // var url = this.buildURL(type.modelName, null, snapshot, 'createRecord');
+  //   // let data = serializer.serializeIntoHash(data, type, snapshot, { includeId: true });
+
+  //   // // const data = this.serialize(snapshot);
+  //   // return this.ajax(url, "POST", { data: data });
+  // },
+
+  /**
+   * builds url for the filters from the base
+   * @return {String}              complete url
+   */
+  buildURL() {
+    const endpoint = 'mdms';
+    const host = this.host();
+    const wssid = this.wssid();
+    const userId = this.get('authentication.currentUser.email');
+    const provider = this.get('provider');
+
+    const url = `${host}/aiy-mw/api/ai_ur/${endpoint}?wssid=${wssid}&provider=${provider}`;
+
+    return url;
+  }
+});
+
+```
+
+
+## Model
+
+[javascript - Id is lost while trying to JSON.stringify Ember model - Stack Overflow](http://stackoverflow.com/questions/29513240/id-is-lost-while-trying-to-json-stringify-ember-model)
+
+[ember JSON.stringify without id](ember JSON.stringify without id)
+
+
+```
+You need to pass in the includeId option to the toJSON method in order to get the ID in the JSON.
+
+var plan = this.get('model');
+var reqBody = JSON.stringify({
+    plan: plan.toJSON({ includeId: true }),
+    token
+});
+Select
+And if you didn't know, JSON.stringify() will call toJSON() for you (which is what is happening in your case). If you want to call JSON.stringify() instead of model.toJSON({}), you can always override it:
+
+App.Plan = DS.Model.extend({
+    toJSON: function() {
+        return this._super({ includeId: true });
+    }
+});
+That way JSON.stringify(plan) will give you exactly what you want.
+```
+
+
+## Ember Closure Actions
+
+```
+<input type="text" onchange={{action "logArgs" value="target.value"}}> <!-- Logs the value of the input (e.target.input) -->
+
+<input type="checkbox"
+       checked={{isChecked}}
+       onclick={{action "foo" value="target.checked"}} />
+```
+
+Use `mut`?
+
+actions up, data down.
+
+
+Ref:
+
+1. http://miguelcamba.com/blog/2016/01/24/ember-closure-actions-in-depth/
+2. http://balinterdi.com/2015/09/25/select-in-ember-with-multiple-selection.html
+3. https://emberigniter.com/parent-to-children-component-communication/
+
