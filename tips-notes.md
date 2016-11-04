@@ -552,4 +552,5 @@ Ref:
 1. http://miguelcamba.com/blog/2016/01/24/ember-closure-actions-in-depth/
 2. http://balinterdi.com/2015/09/25/select-in-ember-with-multiple-selection.html
 3. https://emberigniter.com/parent-to-children-component-communication/
+4. https://guides.emberjs.com/v2.5.0/templates/binding-element-attributes/
 
